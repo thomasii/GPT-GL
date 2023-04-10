@@ -6,7 +6,7 @@ import { Camera } from './camera.js';
 import { createModelViewProjectionMatrix } from './transformations.js';
 import { generateCube } from './cube.js';
 import { generateWall } from './wall.js';
-
+//Yo
 export class MyScene extends Scene {
   constructor(canvas) {
     super(canvas);

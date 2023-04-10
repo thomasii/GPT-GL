@@ -3,10 +3,12 @@
     "gl-matrix": "^3.4.3"
   },
   "devDependencies": {
-    "parcel": "^2.8.3"
+    "parcel": "^2.8.3",
+    "rimraf": "^5.0.0"
   },
   "scripts": {
-    "start": "parcel index.html",
+    "clean": "rimraf .parcel-cache",
+    "start": "npm run clean && parcel index.html --open",
     "build": "parcel build index.html"
   }
 }
