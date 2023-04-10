@@ -9,9 +9,10 @@ import { generateCube } from './cube.js';
 export class MyScene extends Scene {
   constructor(canvas) {
     super(canvas);
-
+    this.gl.disable(this.gl.CULL_FACE);
+    this.gl.enable(this.gl.DEPTH_TEST);
     // Create a new lighting object
-    this.lighting = new Lighting([10, 10, 10], [1, 0, 1], 1);
+    this.lighting = new Lighting([30, 70, 100], [1, 1, 1], 1);
 
     // Create objects and add them to the scene
     this.objects = [
@@ -23,13 +24,12 @@ export class MyScene extends Scene {
     ];
 
     // Create camera and set initial position and rotation speeds
-    this.camera = new Camera([0, 0, -5], 0.05, 0.1);
+    this.camera = new Camera([0, 0, -10], 0.05, 0.1);
   }
 
   drawScene() {
-    // Clear the canvas
-    this.gl.clear(this.gl.COLOR_BUFFER_BIT);
-
+    // Clear the canvas and depth buffer
+    this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
     // Set up the lighting uniforms
     this.lighting.setupUniforms(this.gl, this.program);
 
