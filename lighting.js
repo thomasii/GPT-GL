@@ -1,8 +1,9 @@
-class Lighting {
-  constructor(position, color, intensity) {
+export class Lighting {
+  constructor(position, color, intensity, ambientIntensity = 0.1) {
     this.position = position;
     this.color = color;
     this.intensity = intensity;
+    this.ambientIntensity = ambientIntensity;
   }
 
   setPosition(position) {
@@ -26,7 +27,8 @@ class Lighting {
 
     const intensityUniform = gl.getUniformLocation(program, "u_lightIntensity");
     gl.uniform1f(intensityUniform, this.intensity);
+
+    const ambientIntensityUniformLocation = gl.getUniformLocation(program, "u_ambientIntensity");
+    gl.uniform1f(ambientIntensityUniformLocation, this.ambientIntensity);
   }
 }
-
-export { Lighting };

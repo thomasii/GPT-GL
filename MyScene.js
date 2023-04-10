@@ -1,10 +1,11 @@
 import { Scene } from './Scene.js';
 import { Geometry } from './geometry.js';
 import { Lighting } from './lighting.js';
-import { mat4 } from 'gl-matrix';
+import { mat4, quat } from 'gl-matrix';
 import { Camera } from './camera.js';
 import { createModelViewProjectionMatrix } from './transformations.js';
 import { generateCube } from './cube.js';
+import { generateWall } from './wall.js';
 
 export class MyScene extends Scene {
   constructor(canvas) {
@@ -20,9 +21,15 @@ export class MyScene extends Scene {
         geometry: new Geometry(this.gl, this.program, generateCube()),
         modelMatrix: mat4.create()
       },
-      // Add more objects here
+      {
+        geometry: new Geometry(this.gl, this.program, generateCube()),
+        modelMatrix: mat4.fromRotationTranslationScale(mat4.create(), quat.create(), [0, 0, -4], [4, 4, 0.1])
+      },
+      {
+        geometry: new Geometry(this.gl, this.program, generateCube()),
+        modelMatrix: mat4.fromRotationTranslationScale(mat4.create(), quat.create(), [0, -2.5, 0], [4, 0.1, 4])
+      },
     ];
-
     // Create camera and set initial position and rotation speeds
     this.camera = new Camera([0, 0, -10], 0.05, 0.1);
   }
