@@ -11,7 +11,7 @@ export class MyScene extends Scene {
     super(canvas);
 
     // Create a new lighting object
-    this.lighting = new Lighting([0, 1, 0], [1, 0, 1], 1);
+    this.lighting = new Lighting([10, 10, 10], [1, 0, 1], 1);
 
     // Create objects and add them to the scene
     this.objects = [
@@ -44,12 +44,12 @@ export class MyScene extends Scene {
 
   drawObject(object) {
     // Set up the model-view-projection matrix
-    const modelViewProjectionMatrix = createModelViewProjectionMatrix(this.canvas, this.camera, object.modelMatrix);
-
+    const modelViewProjectionMatrix = createModelViewProjectionMatrix(this.gl.canvas, this.camera, object.modelMatrix);
+  
     // Set the uniform for the model-view-projection matrix
     const modelViewProjectionMatrixUniform = this.gl.getUniformLocation(this.program, "u_modelViewProjectionMatrix");
     this.gl.uniformMatrix4fv(modelViewProjectionMatrixUniform, false, modelViewProjectionMatrix);
-
+  
     // Draw the object
     object.geometry.draw(this.gl);
   }
