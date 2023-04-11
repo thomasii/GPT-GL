@@ -24,10 +24,10 @@ export class MyScene extends Scene {
       new Object3D(new Geometry(this.gl, this.program, generateCube()), mat4.fromRotationTranslationScale(mat4.create(), quat.create(), [0, -2.5, 0], [4, 0.1, 4])),
     ];
 
-    const terrainData = generateTerrain(100, 100, 3, 100, 100);
-    const terrainGeometry = new Geometry(this.gl, this.program, terrainData);
-    const terrainObject = new Object3D(terrainGeometry, mat4.create());
-    this.objects.push(terrainObject);
+    //const terrainData = generateTerrain(100, 100, 3, 100, 100);
+    //const terrainGeometry = new Geometry(this.gl, this.program, terrainData);
+    //const terrainObject = new Object3D(terrainGeometry, mat4.create());
+    //this.objects.push(terrainObject);
 
 
 
