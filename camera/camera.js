@@ -9,6 +9,7 @@ export class Camera {
     this.forward = vec3.create();
     this.right = vec3.create();
     this.up = vec3.fromValues(0, 1, 0);
+    this.rotateEnabled = false;
 
     window.addEventListener('keydown', (event) => this.handleKeyInput(event));
     window.addEventListener('mousemove', (event) => this.handleMouseMove(event));
@@ -34,10 +35,15 @@ export class Camera {
       case 'Control':
         vec3.scaleAndAdd(this.position, this.position, this.up, -this.moveSpeed);
         break;
+      case 'm':
+        this.rotateEnabled = !this.rotateEnabled;
+        break;
     }
   }
 
   handleMouseMove(event) {
+    if (!this.rotateEnabled) return;
+
     const dx = event.movementX * this.rotateSpeed;
     const dy = event.movementY * this.rotateSpeed;
     this.rotation[0] -= dy;

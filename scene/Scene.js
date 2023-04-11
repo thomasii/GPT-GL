@@ -1,6 +1,6 @@
-import { createShaderProgram, setLighting } from './shader.js';
-import { vertexShaderSource } from './vertexShader.js';
-import { fragmentShaderSource } from './fragmentShader.js';
+import { createShaderProgram, setLighting } from '../shader/shader.js';
+import { vertexShaderSource } from '../shader/vertexShader.js';
+import { fragmentShaderSource } from '../shader/fragmentShader.js';
 
 export class Scene {
   constructor(canvas) {

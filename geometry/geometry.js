@@ -1,4 +1,4 @@
-import { setupAttribute } from './attribute.js';
+import { setupAttribute } from '../attributes/attribute.js';
 
 class Geometry {
   constructor(gl, program, data) {

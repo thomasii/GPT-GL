@@ -1,4 +1,4 @@
-import { MyScene } from './myScene.js';
+import { MyScene } from './scene/myScene.js';
 
 // Get the canvas and create an instance of MyScene
 const canvas = document.getElementById("canvas");
