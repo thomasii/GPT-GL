@@ -6,6 +6,7 @@ import { Camera } from '../camera/camera.js';
 import { createModelViewProjectionMatrix } from '../transformations/transformations.js';
 import { extractTranslationRotationScale } from '../utils/extractTranslationRotationScale.js';
 import { generateCube } from '../geometry/cube.js';
+import { generateTerrain } from '../geometry/terrain.js';
 import { Object3D } from '../Object3D.js';
 import { ObjectGUI } from '../ObjectGUI.js';
 import { LightingGUI } from '../LightingGUI.js';
@@ -22,11 +23,19 @@ export class MyScene extends Scene {
       new Object3D(new Geometry(this.gl, this.program, generateCube()), mat4.fromRotationTranslationScale(mat4.create(), quat.create(), [0, 0, -4], [4, 4, 0.1])),
       new Object3D(new Geometry(this.gl, this.program, generateCube()), mat4.fromRotationTranslationScale(mat4.create(), quat.create(), [0, -2.5, 0], [4, 0.1, 4])),
     ];
+
+    const terrainData = generateTerrain(100, 100, 3, 100, 100);
+    const terrainGeometry = new Geometry(this.gl, this.program, terrainData);
+    const terrainObject = new Object3D(terrainGeometry, mat4.create());
+    this.objects.push(terrainObject);
+
+
+
     this.camera = new Camera([0, 0, 10], 0.05, 0.1);
 
     this.selectedObjectIndex = 1;
 
-    this.objectGUI = new ObjectGUI(this, this.objects);
+    this.objectGUI = new ObjectGUI(this, this.objects, this.requestRender.bind(this));
     this.lightingGUI = new LightingGUI(this, this.lighting);
   }
 

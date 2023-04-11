@@ -1,4 +1,4 @@
-import { createShaderProgram, setLighting } from '../shader/shader.js';
+import { createShaderProgram } from '../shader/shader.js';
 import { vertexShaderSource } from '../shader/vertexShader.js';
 import { fragmentShaderSource } from '../shader/fragmentShader.js';
 
@@ -24,5 +24,10 @@ export class Scene {
   createSceneObject(vertices, modelMatrix) {
     // Create a new object and add it to the scene
     // To be implemented in derived classes
+  }
+
+  requestRender() {
+    // Request a new frame to be rendered
+    requestAnimationFrame(() => this.drawScene());
   }
 }
