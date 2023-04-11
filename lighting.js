@@ -31,4 +31,8 @@ export class Lighting {
     const ambientIntensityUniformLocation = gl.getUniformLocation(program, "u_ambientIntensity");
     gl.uniform1f(ambientIntensityUniformLocation, this.ambientIntensity);
   }
+
+  setAmbientIntensity(ambientIntensity) {
+    this.ambientIntensity = ambientIntensity;
+  }
 }
