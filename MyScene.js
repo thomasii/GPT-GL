@@ -32,7 +32,7 @@ export class MyScene extends Scene {
       },
     ];
     // Create camera and set initial position and rotation speeds
-    this.camera = new Camera([0, 0, -10], 0.05, 0.1);
+    this.camera = new Camera([0, 0, 10], 0.05, 0.1);
 
     // Set the selected object index
     this.selectedObjectIndex = 1;
