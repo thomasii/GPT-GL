@@ -35,14 +35,15 @@ export class MyScene extends Scene {
     this.camera = new Camera([0, 0, -10], 0.05, 0.1);
 
     // Set the selected object index
-    this.selectedObjectIndex = 0;
+    this.selectedObjectIndex = 1;
 
-    // Initialize properties for position and rotation
-    this.position = { x: 0, y: 0, z: 0 };
-    this.rotation = { x: 0, y: 0, z: 0 };
+  // Initialize properties for position and rotation based on the selected object's transformation
+  const objectTransform = extractTranslationRotationScale(this.objects[this.selectedObjectIndex].modelMatrix);
+  this.position = { ...objectTransform.position }; // Change this line
+  this.rotation = { ...objectTransform.rotation }; // Change this line
+  this.scale = { ...objectTransform.scale }; // Add this line
 
-    this.createGUI();
-
+  this.createGUI();
 }
 
   drawScene() {
@@ -74,29 +75,142 @@ export class MyScene extends Scene {
 
   createGUI() {
     this.gui = new dat.GUI();
-
-    const positionFolder = this.gui.addFolder('Position');
-    positionFolder.add(this.position, 'x', -10, 10).name('X').onChange(() => this.updateModelMatrix());
-    positionFolder.add(this.position, 'y', -10, 10).name('Y').onChange(() => this.updateModelMatrix());
-    positionFolder.add(this.position, 'z', -10, 10).name('Z').onChange(() => this.updateModelMatrix());
-    positionFolder.open();
-
-    const rotationFolder = this.gui.addFolder('Rotation');
-    rotationFolder.add(this.rotation, 'x', 0, 360).name('Rotate X').onChange(() => this.updateModelMatrix());
-    rotationFolder.add(this.rotation, 'y', 0, 360).name('Rotate Y').onChange(() => this.updateModelMatrix());
-    rotationFolder.add(this.rotation, 'z', 0, 360).name('Rotate Z').onChange(() => this.updateModelMatrix());
-    rotationFolder.open();
-
+  
+    const objectSelector = this.gui.add(this, 'selectedObjectIndex', 0, this.objects.length - 1).name('Object').step(1).onChange(() => this.updateSelectedObject());
+    objectSelector.domElement.style.pointerEvents = "all";
+  
+    this.positionFolder = this.gui.addFolder('Position');
+    this.rotationFolder = this.gui.addFolder('Rotation');
+    this.scaleFolder = this.gui.addFolder('Scale');
+  
+    this.positionControllers = {
+      x: this.positionFolder.add(this.position, 'x', -10, 10).name('X').onChange(() => this.updateModelMatrix()),
+      y: this.positionFolder.add(this.position, 'y', -10, 10).name('Y').onChange(() => this.updateModelMatrix()),
+      z: this.positionFolder.add(this.position, 'z', -10, 10).name('Z').onChange(() => this.updateModelMatrix())
+    };
+  
+    this.rotationControllers = {
+      x: this.rotationFolder.add(this.rotation, 'x', 0, 360).name('Rotate X').onChange(() => this.updateModelMatrix()),
+      y: this.rotationFolder.add(this.rotation, 'y', 0, 360).name('Rotate Y').onChange(() => this.updateModelMatrix()),
+      z: this.rotationFolder.add(this.rotation, 'z', 0, 360).name('Rotate Z').onChange(() => this.updateModelMatrix())
+    };
+  
+    this.scaleControllers = {
+      x: this.scaleFolder.add(this.scale, 'x', 0.1, 10).name('Scale X').onChange(() => this.updateModelMatrix()),
+      y: this.scaleFolder.add(this.scale, 'y', 0.1, 10).name('Scale Y').onChange(() => this.updateModelMatrix()),
+      z: this.scaleFolder.add(this.scale, 'z', 0.1, 10).name('Scale Z').onChange(() => this.updateModelMatrix())
+    };
+  
+    this.positionFolder.open();
+    this.rotationFolder.open();
+    this.scaleFolder.open();
+  }
+  
+  updateSelectedObject() {
+    const objectTransform = extractTranslationRotationScale(this.objects[this.selectedObjectIndex].modelMatrix);
+  
+    this.position.x = objectTransform.position.x;
+    this.position.y = objectTransform.position.y;
+    this.position.z = objectTransform.position.z;
+  
+    this.rotation.x = objectTransform.rotation.x;
+    this.rotation.y = objectTransform.rotation.y;
+    this.rotation.z = objectTransform.rotation.z;
+  
+    this.scale.x = objectTransform.scale.x;
+    this.scale.y = objectTransform.scale.y;
+    this.scale.z = objectTransform.scale.z;
+  
+    this.updateGUI();
+  }
+  
+  
+  updateGUI() {
+    this.positionControllers.x.setValue(this.position.x);
+    this.positionControllers.y.setValue(this.position.y);
+    this.positionControllers.z.setValue(this.position.z);
+  
+    this.rotationControllers.x.setValue(this.rotation.x);
+    this.rotationControllers.y.setValue(this.rotation.y);
+    this.rotationControllers.z.setValue(this.rotation.z);
+  
+    this.scaleControllers.x.setValue(this.scale.x);
+    this.scaleControllers.y.setValue(this.scale.y);
+    this.scaleControllers.z.setValue(this.scale.z);
   }
 
   updateModelMatrix() {
+    // Get the selected object
     const object = this.objects[this.selectedObjectIndex];
-    const translation = mat4.fromTranslation(mat4.create(), [this.position.x, this.position.y, this.position.z]);
-    const rotationX = mat4.fromXRotation(mat4.create(), this.rotation.x * (Math.PI / 180));
-    const rotationY = mat4.fromYRotation(mat4.create(), this.rotation.y * (Math.PI / 180));
-    const rotationZ = mat4.fromZRotation(mat4.create(), this.rotation.z * (Math.PI / 180));
-    mat4.multiply(object.modelMatrix, translation, rotationX);
-    mat4.multiply(object.modelMatrix, object.modelMatrix, rotationY);
-    mat4.multiply(object.modelMatrix, object.modelMatrix, rotationZ);
+  
+    // Convert rotation angles from degrees to radians
+    const rotationRadians = {
+      x: this.rotation.x * (Math.PI / 180),
+      y: this.rotation.y * (Math.PI / 180),
+      z: this.rotation.z * (Math.PI / 180)
+    };
+  
+    // Update the object's model matrix
+    mat4.fromRotationTranslationScale(
+      object.modelMatrix,
+      quat.fromEuler(quat.create(), rotationRadians.x, rotationRadians.y, rotationRadians.z),
+      [this.position.x, this.position.y, this.position.z],
+      [this.scale.x, this.scale.y, this.scale.z]
+    );
   }
+}
+
+// Helper function to extract translation and rotation from a model matrix
+function extractTranslationRotationScale(modelMatrix) {
+  const translation = new Float32Array(3);
+  const rotation = new Float32Array(3);
+  const scale = new Float32Array(3);
+  mat4.getTranslation(translation, modelMatrix);
+  const rotationQuat = quat.create();
+  mat4.getRotation(rotationQuat, modelMatrix);
+  quatToEuler(rotation, rotationQuat); // Convert quaternion to Euler angles
+  mat4.getScaling(scale, modelMatrix);
+
+  return {
+    position: {
+      x: translation[0],
+      y: translation[1],
+      z: translation[2]
+    },
+    rotation: {
+      x: rotation[0],
+      y: rotation[1],
+      z: rotation[2]
+    },
+    scale: {
+      x: scale[0],
+      y: scale[1],
+      z: scale[2]
+    }
+  };
+}
+
+function quatToEuler(out, q) {
+  const ysqr = q[1] * q[1];
+
+  // Roll (x-axis rotation)
+  const t0 = 2.0 * (q[3] * q[0] + q[1] * q[2]);
+  const t1 = 1.0 - 2.0 * (q[0] * q[0] + ysqr);
+  out[0] = Math.atan2(t0, t1);
+
+  // Pitch (y-axis rotation)
+  let t2 = 2.0 * (q[3] * q[1] - q[2] * q[0]);
+  t2 = t2 > 1.0 ? 1.0 : t2;
+  t2 = t2 < -1.0 ? -1.0 : t2;
+  out[1] = Math.asin(t2);
+
+  // Yaw (z-axis rotation)
+  const t3 = 2.0 * (q[3] * q[2] + q[0] * q[1]);
+  const t4 = 1.0 - 2.0 * (ysqr + q[2] * q[2]);
+  out[2] = Math.atan2(t3, t4);
+
+  // Convert to degrees
+  out[0] *= 180 / Math.PI;
+  out[1] *= 180 / Math.PI;
+  out[2] *= 180 / Math.PI;
 }
