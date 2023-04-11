@@ -74,7 +74,46 @@ export function generateCube() {
      -1.0, 0.0, 0.0,
      -1.0, 0.0, 0.0,
     ];
-     
+
+    const colors = [
+
+      // Front face
+      1.0, 1.0, 0.0,
+      1.0, 1.0, 0.0,
+      1.0, 0.0, 0.0,
+      1.0, 0.0, 0.0,
+
+      // Back face
+      0.0, 1.0, 0.0,
+      0.0, 1.0, 0.0,
+      0.0, 1.0, 0.0,
+      0.0, 1.0, 0.0,
+      
+      // Top face
+      0.0, 0.0, 1.0,
+      0.0, 0.0, 1.0,
+      0.0, 0.0, 1.0,
+      0.0, 0.0, 1.0,
+      
+      // Bottom face
+      1.0, 1.0, 0.0,
+      1.0, 1.0, 0.0,
+      1.0, 1.0, 0.0,
+      1.0, 1.0, 0.0,
+      
+      // Right face
+      1.0, 0.0, 1.0,
+      1.0, 0.0, 1.0,
+      1.0, 0.0, 1.0,
+      1.0, 0.0, 1.0,
+      
+      // Left face
+      0.0, 1.0, 1.0,
+      0.0, 1.0, 1.0,
+      0.0, 1.0, 1.0,
+      0.0, 1.0, 1.0,
+    ];
+
      const indices = [
      0, 1, 2, 0, 2, 3, // Front face
      4, 5, 6, 4, 6, 7, // Back face
@@ -87,6 +126,7 @@ export function generateCube() {
      return {
      vertices: vertices,
      normals: normals,
+     colors: colors,
      indices: indices,
      };
   }

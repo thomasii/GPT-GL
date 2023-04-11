@@ -15,6 +15,11 @@ class Geometry {
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(data.normals), gl.STATIC_DRAW);
     setupAttribute(gl, program, this.normalBuffer, 'normal', 3, gl.FLOAT, false, 0, 0);
 
+    this.colorBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.colorBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(data.colors), gl.STATIC_DRAW);
+    setupAttribute(gl, program, this.colorBuffer, 'color', 3, gl.FLOAT, false, 0, 0);
+
     this.indexBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(data.indices), gl.STATIC_DRAW);
@@ -25,6 +30,7 @@ class Geometry {
   draw(gl) {
     gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
     gl.bindBuffer(gl.ARRAY_BUFFER, this.normalBuffer);
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.colorBuffer);
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
 
     gl.drawElements(gl.TRIANGLES, this.indexCount, gl.UNSIGNED_SHORT, 0);

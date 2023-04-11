@@ -3,10 +3,12 @@ precision mediump float;
 
 in vec3 v_position;
 in vec3 v_lightDirection;
+in vec3 v_color;
 
 uniform vec3 u_lightColor;
 uniform float u_lightIntensity;
-uniform float u_ambientIntensity; // Add this line
+uniform float u_ambientIntensity;
+uniform vec3 u_objectColor; // Add this line
 
 out vec4 outColor;
 
@@ -15,8 +17,13 @@ void main() {
   float light = max(0.0, dot(normal, v_lightDirection));
   vec3 directLight = u_lightColor * light * u_lightIntensity;
 
-  vec3 ambientLight = u_lightColor * u_ambientIntensity; // Add this line
+  vec3 ambientLight = u_lightColor * u_ambientIntensity;
 
-  outColor = vec4(directLight + ambientLight, 1.0); // Modify this line
+  vec3 color = v_color;
+  if (color == vec3(0.0)) {
+    color = u_objectColor;
+  }
+
+  outColor = vec4(directLight * color + ambientLight * color, 1.0);
 }
 `;
