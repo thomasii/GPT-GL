@@ -17,7 +17,7 @@ export class MyScene extends Scene {
     super(canvas);
     this.gl.disable(this.gl.CULL_FACE);
     this.gl.enable(this.gl.DEPTH_TEST);
-    this.lighting = new Lighting([10, 10, -10], [1, 1, 1], 1);
+    this.lighting = new Lighting([100, 100, -100], [1, 1, 1], 1);
   
     //const terrainData = generateTerrain(100, 100, 30, 100, 100);
     //const terrainGeometry = new Geometry(this.gl, this.program, terrainData);
@@ -84,6 +84,14 @@ export class MyScene extends Scene {
         [diffuseTexture, normalTexture, specularTexture]
       ),
     ];
+
+    const terrainData = generateTerrain(100, 100, 30, 100, 100);
+    const terrainGeometry = new Geometry(this.gl, this.program, terrainData);
+    const terrainObject = new Object3D(terrainGeometry, mat4.create(),
+    [diffuseTexture, normalTexture, specularTexture]);
+    this.objects.push(terrainObject);
+
+
   }
   
 

@@ -5,9 +5,10 @@ export function generateTerrain(width, depth, height, subdivisionsWidth, subdivi
   const indices = [];
   const normals = [];
   const colors = [];
+  const textureCoords = [];
   const noise = new Noise(Math.random());
 
-  // Generate vertices
+  // Generate vertices and textureCoords
   for (let z = 0; z <= subdivisionsDepth; z++) {
     for (let x = 0; x <= subdivisionsWidth; x++) {
       const xPos = (x / subdivisionsWidth) * width - width / 2;
@@ -15,18 +16,11 @@ export function generateTerrain(width, depth, height, subdivisionsWidth, subdivi
       const yPos = noise.simplex2(xPos / width, zPos / depth) * height;
 
       vertices.push(xPos, yPos, zPos);
-    }
-  }
 
-  // Generate indices
-  for (let z = 0; z < subdivisionsDepth; z++) {
-    for (let x = 0; x < subdivisionsWidth; x++) {
-      const topLeft = z * (subdivisionsWidth + 1) + x;
-      const topRight = topLeft + 1;
-      const bottomLeft = (z + 1) * (subdivisionsWidth + 1) + x;
-      const bottomRight = bottomLeft + 1;
-
-      indices.push(topLeft, bottomLeft, topRight, topRight, bottomLeft, bottomRight);
+      // Calculate and add texture coordinates (uvs) for each vertex
+      const u = x / subdivisionsWidth;
+      const v = z / subdivisionsDepth;
+      textureCoords.push(u, v); // Add these lines to store the textureCoords coordinates
     }
   }
 
@@ -61,10 +55,26 @@ export function generateTerrain(width, depth, height, subdivisionsWidth, subdivi
     colors.push(color[0], color[1], color[2]);
   }
 
+// Generate indices
+for (let z = 0; z < subdivisionsDepth; z++) {
+  for (let x = 0; x < subdivisionsWidth; x++) {
+    const topLeft = z * (subdivisionsWidth + 1) + x;
+    const topRight = topLeft + 1;
+    const bottomLeft = topLeft + (subdivisionsWidth + 1);
+    const bottomRight = bottomLeft + 1;
+
+    // First triangle
+    indices.push(topLeft, bottomLeft, topRight);
+    // Second triangle
+    indices.push(bottomLeft, bottomRight, topRight);
+  }
+}
+
   return {
     vertices,
     indices,
     normals,
     colors,
+    textureCoords
   };
 }
