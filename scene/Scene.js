@@ -15,11 +15,15 @@ export class Scene {
     this.program = createShaderProgram(this.gl, vertexShaderSource, fragmentShaderSource);
     this.gl.useProgram(this.program);
 
+    this.lightSourcePosition = this.gl.getUniformLocation(this.program, 'uLightSourcePosition');
+
     // Set the blend factor for vertex color and texture color
     const blendFactorLocation = this.gl.getUniformLocation(this.program, "u_blendFactor");
     this.gl.useProgram(this.program);
     this.gl.uniform1f(blendFactorLocation, 0.5); // Set the blend factor to 0.5 as an example
-  }d
+
+    
+  }
 
   drawScene() {
     // Set up lighting and objects specific to each scene
@@ -35,4 +39,10 @@ export class Scene {
     // Request a new frame to be rendered
     requestAnimationFrame(() => this.drawScene());
   }
+
+  setLightSourcePosition(x, y, z) {
+    this.gl.useProgram(this.program);
+    this.gl.uniform3f(this.lightSourcePosition, x, y, z);
+  }
+  
 }
