@@ -4,10 +4,11 @@ import { extractTranslationRotationScale } from './utils/extractTranslationRotat
 import { createModelMatrix } from './utils/createModelMatrix.js';
 
 export class ObjectGUI {
-    constructor(scene, objects) {
+    constructor(scene, objects, textures) {
       this.scene = scene;
       this.objects = objects;
-  
+      this.textures = textures;
+
       this.selectedObjectIndex = 0;
   
       // Create simple objects to store position, rotation, and scale
@@ -26,8 +27,33 @@ export class ObjectGUI {
       this.setupPositionFolder();
       this.setupRotationFolder();
       this.setupScaleFolder();
+      this.setupTexturesFolder();
       this.updateSelectedObject();
     }
+    
+    setupTexturesFolder() {
+      this.texturesFolder = this.gui.addFolder('Textures');
+      
+      const textureNames = Object.keys(this.textures);
+      const textureTypes = ['Diffuse', 'Normal', 'Specular'];
+    
+      this.selectedTextures = {
+        diffuse: textureNames.length > 0 ? textureNames[0] : '',
+        normal: textureNames.length > 0 ? textureNames[0] : '',
+        specular: textureNames.length > 0 ? textureNames[0] : ''
+      };
+    
+      textureTypes.forEach((type) => {
+        this.texturesFolder.add(this.selectedTextures, type.toLowerCase(), textureNames)
+          .name(`${type} Texture`)
+          .onChange(() => {
+            this.scene.requestRender();
+          });
+      });
+    
+      this.texturesFolder.open();
+    }
+
     setupPositionFolder() {
         this.positionFolder = this.gui.addFolder('Position');
         this.positionControllers = {

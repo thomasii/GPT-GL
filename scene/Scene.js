@@ -14,7 +14,12 @@ export class Scene {
     // Create the shader program
     this.program = createShaderProgram(this.gl, vertexShaderSource, fragmentShaderSource);
     this.gl.useProgram(this.program);
-  }
+
+    // Set the blend factor for vertex color and texture color
+    const blendFactorLocation = this.gl.getUniformLocation(this.program, "u_blendFactor");
+    this.gl.useProgram(this.program);
+    this.gl.uniform1f(blendFactorLocation, 0.5); // Set the blend factor to 0.5 as an example
+  }d
 
   drawScene() {
     // Set up lighting and objects specific to each scene

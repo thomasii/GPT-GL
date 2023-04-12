@@ -1,8 +1,7 @@
-import { MyScene } from './scene/myScene.js';
+import { MyScene } from './scene/MyScene.js';
 
-// Get the canvas and create an instance of MyScene
-const canvas = document.getElementById("canvas");
-const myScene = new MyScene(canvas);
+const canvas = document.querySelector('#canvas');
 
-// Start drawing the scene
-myScene.drawScene();
+(async () => {
+  const scene = new MyScene(canvas);
+})();
