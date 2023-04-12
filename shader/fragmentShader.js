@@ -7,7 +7,7 @@ in vec2 v_texcoord;
 in vec3 v_color; // Add this line
 
 uniform sampler2D u_diffuseTexture;
-uniform vec3 uLightSourcePosition;
+uniform vec3 u_lightSourcePosition;
 uniform vec3 u_lightColor;
 uniform float u_lightIntensity;
 uniform float u_ambientIntensity;
@@ -15,7 +15,7 @@ uniform float u_ambientIntensity;
 out vec4 outColor;
 
 void main() {
-  vec3 lightDirection = normalize(uLightSourcePosition - v_position);
+  vec3 lightDirection = normalize(u_lightSourcePosition - v_position);
   vec3 normal = normalize(v_normal);
   vec3 viewDirection = normalize(-v_position);
   vec3 reflectDirection = reflect(-lightDirection, normal);
