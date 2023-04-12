@@ -15,7 +15,7 @@ export class Scene {
     this.program = createShaderProgram(this.gl, vertexShaderSource, fragmentShaderSource);
     this.gl.useProgram(this.program);
 
-    this.lightSourcePosition = this.gl.getUniformLocation(this.program, 'uLightSourcePosition');
+    this.lightSourcePosition = this.gl.getUniformLocation(this.program, 'u_lightSourcePosition');
 
     // Set the blend factor for vertex color and texture color
     const blendFactorLocation = this.gl.getUniformLocation(this.program, "u_blendFactor");

@@ -6,7 +6,7 @@ in vec3 normal;
 in vec2 a_texCoord;
 
 uniform mat4 u_modelViewProjectionMatrix;
-uniform vec3 uLightSourcePosition;
+uniform vec3 u_lightSourcePosition;
 
 out vec3 v_position;
 out vec3 v_normal;
@@ -18,6 +18,6 @@ void main() {
   v_position = position;
   v_normal = normal;
   v_texcoord = a_texCoord;
-  v_lightDirection = normalize(uLightSourcePosition - position);
+  v_lightDirection = normalize(u_lightSourcePosition - position);
 }
 `;
