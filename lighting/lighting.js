@@ -1,9 +1,6 @@
 export class Lighting {
-  constructor(position, color, intensity, ambientIntensity = 0.1) {
-    this.position = position;
-    this.color = color;
-    this.intensity = intensity;
-    this.ambientIntensity = ambientIntensity;
+  constructor(lights) {
+    this.lights = lights;
   }
 
   setPosition(position) {
@@ -19,17 +16,16 @@ export class Lighting {
   }
 
   setupUniforms(gl, program) {
-    const lightingUniform = gl.getUniformLocation(program, "u_lightSourcePosition");
-    gl.uniform3fv(lightingUniform, this.position);
+    const numLights = this.lights.length;
+    gl.uniform1i(gl.getUniformLocation(program, "u_numLights"), numLights);
 
-    const colorUniform = gl.getUniformLocation(program, "u_lightColor");
-    gl.uniform3fv(colorUniform, this.color);
-
-    const intensityUniform = gl.getUniformLocation(program, "u_lightIntensity");
-    gl.uniform1f(intensityUniform, this.intensity);
-
-    const ambientIntensityUniformLocation = gl.getUniformLocation(program, "u_ambientIntensity");
-    gl.uniform1f(ambientIntensityUniformLocation, this.ambientIntensity);
+    for (let i = 0; i < numLights; i++) {
+      const light = this.lights[i];
+      gl.uniform3fv(gl.getUniformLocation(program, `u_lightSourcePositions[${i}]`), light.position);
+      gl.uniform3fv(gl.getUniformLocation(program, `u_lightColors[${i}]`), light.color);
+      gl.uniform1f(gl.getUniformLocation(program, `u_lightIntensities[${i}]`), light.intensity);
+      gl.uniform1f(gl.getUniformLocation(program, `u_ambientIntensities[${i}]`), light.ambientIntensity);
+    }
   }
 
   setAmbientIntensity(ambientIntensity) {

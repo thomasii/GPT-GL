@@ -17,7 +17,10 @@ export class MyScene extends Scene {
     super(canvas);
     this.gl.disable(this.gl.CULL_FACE);
     this.gl.enable(this.gl.DEPTH_TEST);
-    this.lighting = new Lighting([100, 100, -100], [1, 1, 1], 1);
+    this.lighting = new Lighting([
+      { position: [100, 100, -100], color: [1, 1, 1], intensity: 1, ambientIntensity: 0.1 },
+      { position: [-100, 100, -100], color: [1, 0, 0], intensity: 0.5, ambientIntensity: 0.05 }
+    ]);
   
     //const terrainData = generateTerrain(100, 100, 30, 100, 100);
     //const terrainGeometry = new Geometry(this.gl, this.program, terrainData);
@@ -100,7 +103,7 @@ export class MyScene extends Scene {
     this.lighting.setupUniforms(this.gl, this.program);
     
     // In the `drawScene` or `requestRender` method
-    const lightPosition = this.lighting.position;
+    const lightPosition = this.lighting.lights[0].position; // Modify this line
     this.setLightSourcePosition(lightPosition[0], lightPosition[1], lightPosition[2]);
     
     for (const object of this.objects) {
