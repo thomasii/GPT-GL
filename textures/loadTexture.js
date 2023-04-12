@@ -1,5 +1,7 @@
 // loadTexture.js
-export async function loadTexture(gl, program, url) {
+import { TextureSet } from './TextureSet.js';
+
+export async function loadTexture(gl, url) {
   const texture = gl.createTexture();
   gl.bindTexture(gl.TEXTURE_2D, texture);
 
@@ -22,21 +24,16 @@ export async function loadTexture(gl, program, url) {
   return texture;
 }
 
-export async function setupTextures(gl, program, textureUrls) {
-  const textures = [];
-  for (const url of textureUrls) { 
-    const texture = await loadTexture(gl, program, url);
-    textures.push(texture);
-  }
+// loadTexture.js
 
-  const textureUniforms = ["u_diffuseTexture", "u_normalTexture", "u_specularTexture"];
+export async function setupTextureSet(gl, textureSetDefinitions) {
+  const promises = textureSetDefinitions.map(async definition => {
+    const diffuseTexture = await loadTexture(gl, definition.diffuse);
+    const normalTexture = await loadTexture(gl, definition.normal);
+    const specularTexture = await loadTexture(gl, definition.specular);
+    console.log(definition)
+    return new TextureSet(diffuseTexture, normalTexture, specularTexture);
+  });
 
-  for (let i = 0; i < textures.length; i++) {
-    gl.activeTexture(gl.TEXTURE0 + i);
-    gl.bindTexture(gl.TEXTURE_2D, textures[i]);
-    const textureUniformLocation = gl.getUniformLocation(program, textureUniforms[i ]);
-    gl.uniform1i(textureUniformLocation, i);
-  }
-
-  return textures;
+  return await Promise.all(promises);
 }

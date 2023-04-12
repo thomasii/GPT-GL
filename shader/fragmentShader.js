@@ -6,7 +6,11 @@ in vec3 v_normal;
 in vec2 v_texcoord;
 in vec3 v_color;
 
-uniform sampler2D u_diffuseTexture;
+flat in int v_textureSetIndex;
+
+uniform sampler2D u_diffuseTexture0;
+uniform sampler2D u_diffuseTexture1;
+
 uniform vec3 u_lightColors[4];
 uniform float u_lightIntensities[4];
 uniform float u_ambientIntensities[4];
@@ -14,13 +18,20 @@ uniform int u_numLights;
 
 out vec4 outColor;
 
-in vec3 v_surfaceToLight[4]; // Add this line
-in vec3 v_surfaceToView; // Add this line
+in vec3 v_surfaceToLight[4];
+in vec3 v_surfaceToView;
 
 void main() {
   vec3 normal = normalize(v_normal);
-  vec3 viewDirection = normalize(v_surfaceToView); // Change this line
-  vec3 textureColor = texture(u_diffuseTexture, v_texcoord).rgb;
+  vec3 viewDirection = normalize(v_surfaceToView);
+
+  vec3 textureColor;
+  if (v_textureSetIndex == 0) {
+    textureColor = texture(u_diffuseTexture0, v_texcoord).rgb;
+  } else if (v_textureSetIndex == 1) {
+    textureColor = texture(u_diffuseTexture1, v_texcoord).rgb;
+  }
+  
   vec3 color = mix(textureColor, v_color, 0.5);
 
   vec3 totalAmbient = vec3(0, 0, 0);

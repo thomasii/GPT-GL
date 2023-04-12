@@ -3,16 +3,25 @@ import { vertexShaderSource } from '../shader/vertexShader.js';
 import { fragmentShaderSource } from '../shader/fragmentShader.js';
 
 export class Scene {
-  constructor(canvas) {
+  constructor(canvas,textureSetDefinitions) {
     this.gl = canvas.getContext("webgl2");
     console.log("WebGL context:", this.gl);
+
+    const uniformNames = [
+      'u_modelViewProjectionMatrix',
+      'u_diffuseTexture0', 'u_normalTexture0', 'u_specularTexture0',
+      'u_diffuseTexture1', 'u_normalTexture1', 'u_specularTexture1',
+      'u_diffuseTexture2', 'u_normalTexture2', 'u_specularTexture2',
+      'u_diffuseTexture3', 'u_normalTexture3', 'u_specularTexture3',
+      // ... add more if needed
+    ];
 
     // Set the clear color and clear the canvas
     this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
     this.gl.clear(this.gl.COLOR_BUFFER_BIT);
 
     // Create the shader program
-    this.program = createShaderProgram(this.gl, vertexShaderSource, fragmentShaderSource);
+    this.program = createShaderProgram(this.gl, vertexShaderSource, fragmentShaderSource,uniformNames);
     this.gl.useProgram(this.program);
 
     this.lightSourcePosition = this.gl.getUniformLocation(this.program, 'u_lightSourcePosition');

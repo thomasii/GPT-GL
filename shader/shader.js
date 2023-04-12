@@ -1,5 +1,5 @@
 // shader.js
-export function createShaderProgram(gl, vertexShaderSource, fragmentShaderSource) {
+export function createShaderProgram(gl, vertexShaderSource, fragmentShaderSource,uniformNames) {
   // Compile the vertex shader
   const vertexShader = gl.createShader(gl.VERTEX_SHADER);
   gl.shaderSource(vertexShader, vertexShaderSource);
@@ -18,18 +18,24 @@ export function createShaderProgram(gl, vertexShaderSource, fragmentShaderSource
     return null;
   }
 
-  // Link the shader program
-  const program = gl.createProgram();
-  gl.attachShader(program, vertexShader);
-  gl.attachShader(program, fragmentShader);
-  gl.linkProgram(program);
-  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-    console.error(gl.getProgramInfoLog(program));
-    return null;
-  }
+// Link the shader program
+const program = gl.createProgram();
+gl.attachShader(program, vertexShader);
+gl.attachShader(program, fragmentShader);
+gl.linkProgram(program);
+if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+  console.error(gl.getProgramInfoLog(program));
+  return null;
+}
 
-  // Return the shader program
-  return program;
+// Store uniform locations
+program.uniformLocations = {};
+for (const uniformName of uniformNames) {
+  program.uniformLocations[uniformName] = gl.getUniformLocation(program, uniformName);
+}
+
+// Return the shader program
+return program;
 }
 
 export function setLighting(gl, program, lighting) {

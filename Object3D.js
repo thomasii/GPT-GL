@@ -1,13 +1,12 @@
-import { mat4, vec3, quat } from 'gl-matrix';
+import { mat4, quat, vec3 } from 'gl-matrix';
 import { quatToEuler } from './transformations/quatToEuler.js';
-import { setupTextures } from './textures/loadTexture.js';
-
 export class Object3D {
-  constructor(geometry, modelMatrix, texturePaths) {
+  constructor(geometry, modelMatrix, texturePaths, textureSetIndex) {
     this.geometry = geometry;
     this.modelMatrix = modelMatrix;
     this.texturePaths = texturePaths;
     this.textures = [];
+    this.textureSetIndex = textureSetIndex; // Add this line
 
     // Add position, rotation, and scale properties
     this.position = vec3.create();
@@ -27,16 +26,6 @@ export class Object3D {
 
   async setupTextures(gl, program) {
     this.textures = await setupTextures(gl, program, this.texturePaths);
-  }
-
-
-  createObjects(loadedTextures) {
-    const [diffuseTexture, normalTexture, specularTexture] = loadedTextures;
-  
-    this.objects = [
-      // Use loadedTextures instead of file paths
-      // ...
-    ];
   }
 
 }

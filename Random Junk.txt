@@ -1,0 +1,12 @@
+    this.texturesPaths = [  
+    [
+    '',     //'url1_diffuse.png',  
+    '',     //'url1_normal.png',  
+    ''],[  // 'url1_specular.png']
+    '',     // 
+    '',     //
+    ''],[  // 
+    '',     // 
+    '',      // 
+    '']    // 
+  ];

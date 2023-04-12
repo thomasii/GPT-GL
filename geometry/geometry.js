@@ -29,6 +29,14 @@ class Geometry {
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(data.textureCoords), gl.STATIC_DRAW);
     setupAttribute(gl, program, this.textureCoordBuffer, 'a_texCoord', 2, gl.FLOAT, false, 0, 0);
 
+    // Add this after the textureCoordBuffer setup
+    if (data.textureSetIndex) {
+      this.textureSetIndexBuffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, this.textureSetIndexBuffer);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(data.textureSetIndex), gl.STATIC_DRAW);
+      setupAttribute(gl, program, this.textureSetIndexBuffer, 'a_textureSetIndex', 1, gl.FLOAT, false, 0, 0);
+    }
+
     this.indexCount = data.indices.length;
   }
 
@@ -49,6 +57,18 @@ class Geometry {
     gl.bindBuffer(gl.ARRAY_BUFFER, this.textureCoordBuffer);
     setupAttribute(gl, this.program, this.textureCoordBuffer, 'a_texCoord', 2, gl.FLOAT, false, 0, 0);
   
+    // Add this block after binding textureCoordBuffer and setting a_texCoord attribute
+    if (this.textureSetIndexBuffer) {
+      gl.bindBuffer(gl.ARRAY_BUFFER, this.textureSetIndexBuffer);
+      setupAttribute(gl, this.program, this.textureSetIndexBuffer, 'a_textureSetIndex', 1, gl.FLOAT, false, 0, 0);
+    }
+  
+    // Bind indexBuffer
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
+  
+    // Draw elements
+    gl.drawElements(gl.TRIANGLES, this.indexCount, gl.UNSIGNED_SHORT, 0);
+
     // Bind indexBuffer
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
   

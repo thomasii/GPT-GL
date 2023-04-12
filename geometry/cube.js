@@ -75,7 +75,16 @@ const textureCoords = [
   1.0, 1.0,
   0.0, 1.0,
 ];
-
+  // Add texture set index
+const textureSetIndex = [
+    0, 0, 0, 0, 0, 0, // Front face
+    1, 1, 1, 1, 1, 1, // Back face
+    0, 0, 0, 0, 0, 0, // Top face
+    1, 1, 1, 1, 1, 1, // Bottom face
+    0, 0, 0, 0, 0, 0, // Right face
+    1, 1, 1, 1, 1, 1  // Left face
+  ];
+  
   const normals = [
     // Front face
      0.0,  0.0,  1.0,
@@ -170,5 +179,6 @@ const textureCoords = [
       colors: colors,
       indices: indices,
       textureCoords: textureCoords,
+      textureSetIndex: textureSetIndex // Add this line
     };
   }
