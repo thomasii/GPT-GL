@@ -19,7 +19,7 @@ export class Lighting {
   }
 
   setupUniforms(gl, program) {
-    const lightingUniform = gl.getUniformLocation(program, "u_lightPosition");
+    const lightingUniform = gl.getUniformLocation(program, "u_lightSourcePosition");
     gl.uniform3fv(lightingUniform, this.position);
 
     const colorUniform = gl.getUniformLocation(program, "u_lightColor");

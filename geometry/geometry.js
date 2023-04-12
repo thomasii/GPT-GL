@@ -18,7 +18,7 @@ class Geometry {
     this.colorBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, this.colorBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(data.colors), gl.STATIC_DRAW);
-    setupAttribute(gl, program, this.colorBuffer, 'color', 3, gl.FLOAT, false, 0, 0);
+    setupAttribute(gl, program, this.colorBuffer, 'a_color', 3, gl.FLOAT, false, 0, 0);
 
     this.indexBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
@@ -43,7 +43,7 @@ class Geometry {
   
     // Bind colorBuffer and set color attribute
     gl.bindBuffer(gl.ARRAY_BUFFER, this.colorBuffer);
-    setupAttribute(gl, this.program, this.colorBuffer, 'color', 3, gl.FLOAT, false, 0, 0);
+    setupAttribute(gl, this.program, this.colorBuffer, 'a_color', 3, gl.FLOAT, false, 0, 0);
   
     // Bind textureCoordBuffer and set a_texCoord attribute
     gl.bindBuffer(gl.ARRAY_BUFFER, this.textureCoordBuffer);
