@@ -1,5 +1,4 @@
-// loadTexture.js
-export async function loadTexture(gl, program, url) {
+export async function loadTexture(gl, url) {
   const texture = gl.createTexture();
   gl.bindTexture(gl.TEXTURE_2D, texture);
 
@@ -11,32 +10,16 @@ export async function loadTexture(gl, program, url) {
       gl.bindTexture(gl.TEXTURE_2D, texture);
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
       gl.generateMipmap(gl.TEXTURE_2D);
-      resolve();
+      resolve(texture);
     };
     image.onerror = () => {
       console.error(`Failed to load image: ${url}`);
-      reject();
+      // Create a 1x1 white pixel texture as a default texture
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([255, 255, 255, 255]));
+      gl.generateMipmap(gl.TEXTURE_2D);
+      resolve(texture);
     };
   });
 
   return texture;
-}
-
-export async function setupTextures(gl, program, textureUrls) {
-  const textures = [];
-  for (const url of textureUrls) { 
-    const texture = await loadTexture(gl, program, url);
-    textures.push(texture);
-  }
-
-  const textureUniforms = ["u_diffuseTexture", "u_normalTexture", "u_specularTexture"];
-
-  for (let i = 0; i < textures.length; i++) {
-    gl.activeTexture(gl.TEXTURE0 + i);
-    gl.bindTexture(gl.TEXTURE_2D, textures[i]);
-    const textureUniformLocation = gl.getUniformLocation(program, textureUniforms[i ]);
-    gl.uniform1i(textureUniformLocation, i);
-  }
-
-  return textures;
 }
